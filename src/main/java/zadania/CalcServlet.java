@@ -15,23 +15,45 @@ public class CalcServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Integer a2 = Optional.ofNullable(req.getParameter("a"))
-                .filter(e -> StringUtils.isNumeric(e))
-                .map(e -> Integer.valueOf(e))
-                .orElse(0);
-        Integer b2 = Optional.ofNullable(req.getParameter("b"))
-                .filter(e -> StringUtils.isNumeric(e))
-                .map(e -> Integer.valueOf(e))
-                .orElse(0);
+        Integer a2 = mapToInteger(req.getParameter("a"));
+        Integer b2 = mapToInteger(req.getParameter("b"));
 
-//        String a = req.getParameter("a");
-//        String b = req.getParameter("b");
-//
-//        Integer a1 = Integer.valueOf(StringUtils.isEmpty(a) ? "0" : a);
-//        Integer b1 = Integer.valueOf(StringUtils.isEmpty(a) ? "0" : b);
-        Integer wynik = a2 + b2;
+
+        CalculationResult wynik = calculate(req.getPathInfo(),a2,b2);
+
+
 
         PrintWriter writer = resp.getWriter();
-        writer.print("<h1> Wynik "+a2+" + "+b2+" = "+wynik+"</h1>");
+        writer.print("<h1> Wynik "+wynik.resultRepresentation+"</h1>");
+    }
+    private CalculationResult calculate(String path, int a, int b) {
+        if (path.endsWith("add")) {
+            return new CalculationResult(a + b, a + " + " + b + " = " + (a + b));
+        } else if (path.endsWith("subtract")) {
+            return new CalculationResult(a - b, a + " - " + b + " = " + (a - b));
+        }else if (path.endsWith("multiply")) {
+            return new CalculationResult(a * b, a + " * " + b + " = " + (a * b));
+        }else {
+            return new CalculationResult(0,"Unsupported operation");
+        }
+
+    }
+
+    private static class CalculationResult{
+        private Integer resoult;
+        private String resultRepresentation;
+
+        public CalculationResult(Integer resoult, String resultRepresentation) {
+            this.resoult = resoult;
+            this.resultRepresentation = resultRepresentation;
+        }
+
+
+    }
+    private  Integer mapToInteger(String param){
+        return Optional.ofNullable(param)
+                .filter(e -> StringUtils.isNumeric(e))
+                .map(e -> Integer.valueOf(e))
+                .orElse(0);
     }
 }
