@@ -7,4 +7,14 @@
         <servlet-name>HelloServlet</servlet-name>
         <url-pattern>/hello-world</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CalcServlet</servlet-name>
+        <servlet-class>zadania.CalcServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CalcServlet</servlet-name>
+        <url-pattern>/calc/add</url-pattern>
+    </servlet-mapping>
+
 </web-app>
